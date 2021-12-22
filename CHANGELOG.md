@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.88.4+rev4
+## (2021-12-22)
+
+* tegra-boot-tools: Switch to 3 boot attempts before falling back to the old boot slots on Xaviers [Alexandru Costache]
+
 # v2.88.4+rev3
 ## (2021-12-22)
 
