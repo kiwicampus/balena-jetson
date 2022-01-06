@@ -31,7 +31,7 @@ module.exports =
 		machine: 'kiwi-xavier'
 		image: 'resin-image'
 		fstype: 'resinos-img'
-		version: 'yocto-warrior'
+		version: 'yocto-honister'
 		deployArtifact: 'resin-image-kiwi-xavier.resinos-img'
 		compressed: true
 
