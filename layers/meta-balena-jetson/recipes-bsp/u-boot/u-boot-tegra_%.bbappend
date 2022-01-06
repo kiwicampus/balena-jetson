@@ -48,6 +48,12 @@ SRC_URI_append_jn30b-nano = " \
 RESIN_BOOT_PART_jetson-tx2 = "0x18"
 RESIN_DEFAULT_ROOT_PART_jetson-tx2 = "0x19"
 
+TEGRA_BOARD_FDT_FILE_kiwi-xavier="kiwi-tegra194-p2888-0001-p2822-0000.dtb"
+
+UBOOT_VARS_append = "\
+    TEGRA_BOARD_FDT_FILE \
+"
+
 SRC_URI_append_jetson-tx2 = " \
     file://Add-part-index-command.patch \
     file://tx2-Integrate-with-Balena-u-boot-environment.patch \
