@@ -2,7 +2,7 @@ deviceTypesCommon = require '@resin.io/device-types/common'
 { networkOptions, commonImg, instructions } = deviceTypesCommon
 
 BOARD_FLASH    = 'Place carrier board in force recovery and flash the OS file with <a href=\"https://github.com/balena-os/jetson-flash/\">jetson-flash</a>.'
-BOARD_POWEROFF = 'Remove power from the board.'
+BOARD_POWEROFF = 'After the Nano eMMC module is flashed, remove power from the board.'
 BOARD_POWERON  = 'Power on the board.'
 
 module.exports =
@@ -12,8 +12,7 @@ module.exports =
 	name: 'CTI Photon Nano'
 	arch: 'aarch64'
 	state: 'released'
-	community: 'true'
-	private: false
+	community: true
 
 	instructions: [
 		BOARD_FLASH
@@ -22,18 +21,18 @@ module.exports =
 	]
 
 	gettingStartedLink:
-		windows: 'https://docs.resin.io/jetson-nano/nodejs/getting-started/#adding-your-first-device'
-		osx: 'https://docs.resin.io/jetson-nano/nodejs/getting-started/#adding-your-first-device'
-		linux: 'https://docs.resin.io/jetson-nano/nodejs/getting-started/#adding-your-first-device'
+		windows: 'https://docs.balena.io/jetson-nano/nodejs/getting-started/#adding-your-first-device'
+		osx: 'https://docs.balena.io/jetson-nano/nodejs/getting-started/#adding-your-first-device'
+		linux: 'https://docs.balena.io/jetson-nano/nodejs/getting-started/#adding-your-first-device'
 
 	supportsBlink: false
 
 	yocto:
 		machine: 'photon-nano'
-		image: 'resin-image'
-		fstype: 'resinos-img'
-		version: 'yocto-warrior'
-		deployArtifact: 'resin-image-photon-nano.resinos-img'
+		image: 'balena-image'
+		fstype: 'balenaos-img'
+		version: 'yocto-honister'
+		deployArtifact: 'balena-image-photon-nano.balenaos-img'
 		compressed: true
 
 	options: [ networkOptions.group ]

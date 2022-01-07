@@ -10,8 +10,7 @@ module.exports =
 	aliases: [ 'jetson-xavier-nx-devkit-emmc' ]
 	name: 'Nvidia Jetson Xavier NX Devkit eMMC'
 	arch: 'aarch64'
-	state: 'new'
-	private: false
+	state: 'released'
 
 	instructions: [
 		BOARD_PREPARE
@@ -20,18 +19,18 @@ module.exports =
 	]
 
 	gettingStartedLink:
-		windows: 'https://docs.resin.io/jetson-xavier-nx-devkit-emmc/nodejs/getting-started/#adding-your-first-device'
-		osx: 'https://docs.resin.io/jetson-xavier-nx-devkit-emmc/nodejs/getting-started/#adding-your-first-device'
-		linux: 'https://docs.resin.io/jetson-xavier-nx-devkit-emmc/nodejs/getting-started/#adding-your-first-device'
+		windows: 'https://docs.balena.io/jetson-xavier-nx-devkit-emmc/nodejs/getting-started/#adding-your-first-device'
+		osx: 'https://docs.balena.io/jetson-xavier-nx-devkit-emmc/nodejs/getting-started/#adding-your-first-device'
+		linux: 'https://docs.balena.io/jetson-xavier-nx-devkit-emmc/nodejs/getting-started/#adding-your-first-device'
 
 	supportsBlink: false
 
 	yocto:
 		machine: 'jetson-xavier-nx-devkit-emmc'
-		image: 'resin-image'
-		fstype: 'resinos-img'
-		version: 'yocto-warrior'
-		deployArtifact: 'resin-image-jetson-xavier-nx-devkit-emmc.resinos-img'
+		image: 'balena-image'
+		fstype: 'balenaos-img'
+		version: 'yocto-honister'
+		deployArtifact: 'balena-image-jetson-xavier-nx-devkit-emmc.balenaos-img'
 		compressed: true
 
 	options: [ networkOptions.group ]

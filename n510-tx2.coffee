@@ -17,7 +17,6 @@ module.exports =
 	arch: 'aarch64'
 	state: 'released'
 	community: true
-	private: false
 
 	stateInstructions:
 		postProvisioning: postProvisioningInstructions
@@ -30,18 +29,18 @@ module.exports =
 	].concat(postProvisioningInstructions)
 
 	gettingStartedLink:
-		windows: 'https://docs.resin.io/jetson-tx2/nodejs/getting-started/#adding-your-first-device'
-		osx: 'https://docs.resin.io/jetson-tx2/nodejs/getting-started/#adding-your-first-device'
-		linux: 'https://docs.resin.io/jetson-tx2/nodejs/getting-started/#adding-your-first-device'
+		windows: 'https://docs.balena.io/jetson-tx2/nodejs/getting-started/#adding-your-first-device'
+		osx: 'https://docs.balena.io/jetson-tx2/nodejs/getting-started/#adding-your-first-device'
+		linux: 'https://docs.balena.io/jetson-tx2/nodejs/getting-started/#adding-your-first-device'
 
 	supportsBlink: false
 
 	yocto:
 		machine: 'n510-tx2'
-		image: 'resin-image-flasher'
-		fstype: 'resinos-img'
-		version: 'yocto-warrior'
-		deployArtifact: 'resin-image-flasher-n510-tx2.resinos-img'
+		image: 'balena-image-flasher'
+		fstype: 'balenaos-img'
+		version: 'yocto-honister'
+		deployArtifact: 'balena-image-flasher-n510-tx2.balenaos-img'
 		compressed: true
 
 	options: [ networkOptions.group ]

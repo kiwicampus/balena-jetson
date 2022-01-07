@@ -8,10 +8,9 @@ module.exports =
 	version: 1
 	slug: 'jetson-xavier'
 	aliases: [ 'jetson-xavier' ]
-	name: 'Nvidia Jetson Xavier'
+	name: 'Nvidia Jetson Xavier AGX'
 	arch: 'aarch64'
-	state: 'new'
-	private: false
+	state: 'released'
 
 	instructions: [
 		BOARD_PREPARE
@@ -20,18 +19,18 @@ module.exports =
 	]
 
 	gettingStartedLink:
-		windows: 'https://docs.resin.io/jetson-xavier/nodejs/getting-started/#adding-your-first-device'
-		osx: 'https://docs.resin.io/jetson-xavier/nodejs/getting-started/#adding-your-first-device'
-		linux: 'https://docs.resin.io/jetson-xavier/nodejs/getting-started/#adding-your-first-device'
+		windows: 'https://docs.balena.io/jetson-xavier/nodejs/getting-started/#adding-your-first-device'
+		osx: 'https://docs.balena.io/jetson-xavier/nodejs/getting-started/#adding-your-first-device'
+		linux: 'https://docs.balena.io/jetson-xavier/nodejs/getting-started/#adding-your-first-device'
 
 	supportsBlink: false
 
 	yocto:
 		machine: 'jetson-xavier'
-		image: 'resin-image'
-		fstype: 'resinos-img'
-		version: 'yocto-warrior'
-		deployArtifact: 'resin-image-jetson-xavier.resinos-img'
+		image: 'balena-image'
+		fstype: 'balenaos-img'
+		version: 'yocto-honister'
+		deployArtifact: 'balena-image-jetson-xavier.balenaos-img'
 		compressed: true
 
 	options: [ networkOptions.group ]

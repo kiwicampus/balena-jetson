@@ -16,7 +16,6 @@ module.exports =
 	name: 'Nvidia Jetson TX1'
 	arch: 'aarch64'
 	state: 'released'
-	private: false
 
 	stateInstructions:
 		postProvisioning: postProvisioningInstructions
@@ -30,22 +29,22 @@ module.exports =
 
 	imageDownloadAlerts: [{
 		type: "warning",
-		message: "Please ensure the board was running L4T 32.3.1 before flashing BalenaOS. Flashing will not work if the board has the older L4T 28.X partitions"
+		message: "Please ensure the board was running L4T 32.4.2 before flashing BalenaOS. Flashing will not work if the board has the older L4T 28.X partitions"
 	}]
 
 	gettingStartedLink:
-		windows: 'https://docs.resin.io/jetson-tx1/nodejs/getting-started/#adding-your-first-device'
-		osx: 'https://docs.resin.io/jetson-tx1/nodejs/getting-started/#adding-your-first-device'
-		linux: 'https://docs.resin.io/jetson-tx1/nodejs/getting-started/#adding-your-first-device'
+		windows: 'https://docs.balena.io/jetson-tx1/nodejs/getting-started/#adding-your-first-device'
+		osx: 'https://docs.balena.io/jetson-tx1/nodejs/getting-started/#adding-your-first-device'
+		linux: 'https://docs.balena.io/jetson-tx1/nodejs/getting-started/#adding-your-first-device'
 
 	supportsBlink: false
 
 	yocto:
 		machine: 'jetson-tx1'
-		image: 'resin-image-flasher'
-		fstype: 'resinos-img'
-		version: 'yocto-warrior'
-		deployArtifact: 'resin-image-flasher-jetson-tx1.resinos-img'
+		image: 'balena-image-flasher'
+		fstype: 'balenaos-img'
+		version: 'yocto-dunfell'
+		deployArtifact: 'balena-image-flasher-jetson-tx1.balenaos-img'
 		compressed: true
 
 	options: [ networkOptions.group ]

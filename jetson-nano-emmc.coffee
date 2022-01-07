@@ -11,8 +11,7 @@ module.exports =
 	aliases: [ 'jetson-nano-emmc' ]
 	name: 'Nvidia Jetson Nano eMMC'
 	arch: 'aarch64'
-	state: 'new'
-	private: false
+	state: 'released'
 
 	instructions: [
 		BOARD_PREPARE
@@ -21,18 +20,18 @@ module.exports =
 	]
 
 	gettingStartedLink:
-		windows: 'https://docs.resin.io/jetson-nano-emmc/nodejs/getting-started/#adding-your-first-device'
-		osx: 'https://docs.resin.io/jetson-nano-emmc/nodejs/getting-started/#adding-your-first-device'
-		linux: 'https://docs.resin.io/jetson-nano-emmc/nodejs/getting-started/#adding-your-first-device'
+		windows: 'https://docs.balena.io/jetson-nano-emmc/nodejs/getting-started/#adding-your-first-device'
+		osx: 'https://docs.balena.io/jetson-nano-emmc/nodejs/getting-started/#adding-your-first-device'
+		linux: 'https://docs.balena.io/jetson-nano-emmc/nodejs/getting-started/#adding-your-first-device'
 
 	supportsBlink: false
 
 	yocto:
 		machine: 'jetson-nano-emmc'
-		image: 'resin-image'
-		fstype: 'resinos-img'
-		version: 'yocto-warrior'
-		deployArtifact: 'resin-image-jetson-nano-emmc.resinos-img'
+		image: 'balena-image'
+		fstype: 'balenaos-img'
+		version: 'yocto-honister'
+		deployArtifact: 'balena-image-jetson-nano-emmc.balenaos-img'
 		compressed: true
 
 	options: [ networkOptions.group ]
