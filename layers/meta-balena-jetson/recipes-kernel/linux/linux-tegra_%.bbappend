@@ -377,7 +377,7 @@ do_deploy:append:astro-tx2() {
     cp ${WORKDIR}/tegra186-tx2-cti-ASG001-revG+.dtb "${DEPLOYDIR}"
 }
 
-do_deploy_append_kiwi-xavier() {
+do_deploy:append:kiwi-xavier() {
     cp ${WORKDIR}/tegra194-agx-kiwi-AGX.dtb "${DEPLOYDIR}"
 }
 

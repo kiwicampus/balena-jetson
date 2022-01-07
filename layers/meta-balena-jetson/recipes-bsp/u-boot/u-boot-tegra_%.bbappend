@@ -42,6 +42,7 @@ TEGRA_BOARD_FDT_FILE:jetson-tx2-4gb="tegra186-quill-p3489-0888-a00-00-base.dtb"
 TEGRA_BOARD_FDT_FILE:jetson-tx2-nx-devkit="tegra186-p3636-0001-p3509-0000-a01.dtb"
 TEGRA_BOARD_FDT_FILE:astro-tx2="tegra186-tx2-cti-ASG001-revG+.dtb"
 TEGRA_BOARD_FDT_FILE:floyd-nano = "tegra210-p3448-0002-p3449-0000-b00-floyd-nano.dtb"
+TEGRA_BOARD_FDT_FILE:kiwi-xavier="tegra194-agx-kiwi-AGX.dtb"
 
 UBOOT_VARS:append = "\
     TEGRA_BOARD_FDT_FILE \
@@ -80,12 +81,6 @@ SRC_URI:append:jetson-nano-2gb-devkit = " \
 # In l4t 28.2 below partitions were 0xC and 0xD
 BALENA_BOOT_PART:jetson-tx2 = "0x18"
 BALENA_DEFAULT_ROOT_PART:jetson-tx2 = "0x19"
-
-TEGRA_BOARD_FDT_FILE_kiwi-xavier="tegra194-agx-kiwi-AGX.dtb"
-
-UBOOT_VARS_append = "\
-    TEGRA_BOARD_FDT_FILE \
-"
 
 SRC_URI:append:jetson-tx2 = " \
     file://Add-part-index-command.patch \

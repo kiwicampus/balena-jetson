@@ -29,10 +29,10 @@ module.exports =
 
 	yocto:
 		machine: 'kiwi-xavier'
-		image: 'resin-image'
-		fstype: 'resinos-img'
+		image: 'balena-image'
+		fstype: 'balenaos-img'
 		version: 'yocto-honister'
-		deployArtifact: 'resin-image-kiwi-xavier.resinos-img'
+		deployArtifact: 'balena-image-kiwi-xavier.balenaos-img'
 		compressed: true
 
 	options: [ networkOptions.group ]
