@@ -28,8 +28,9 @@ SRC_URI:append:jetson-tx2 = " \
     file://0001-gasket-Backport-gasket-driver-from-linux-coral.patch \
 "
 
-SRC_URI:append_kiwi-xavier = " \
+SRC_URI:append:kiwi-xavier = " \
     file://tegra194-agx-kiwi-AGX.dtb \
+    file://tegra194-a02-bpmp-p2888-a04-kiwi.dtb \
 "
 
 SRC_URI:append:jetson-xavier-nx-devkit-seeed-2mic-hat = " \
@@ -379,6 +380,7 @@ do_deploy:append:astro-tx2() {
 
 do_deploy:append:kiwi-xavier() {
     cp ${WORKDIR}/tegra194-agx-kiwi-AGX.dtb "${DEPLOYDIR}"
+    cp ${WORKDIR}/tegra194-a02-bpmp-p2888-a04-kiwi.dtb "${DEPLOYDIR}"
 }
 
 do_deploy:append:cti-rogue-xavier() {

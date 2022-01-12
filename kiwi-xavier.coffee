@@ -6,13 +6,13 @@ FLASH_TOOL = 'Unzip BalenaOS image and use the Jetson Flash tool to flash the bo
 DONE_FLASHING  = 'After flashing is completed, please wait until the board is rebooted'
 module.exports =
 	version: 1
-	slug: 'kiwi-xavier'
-	aliases: [ 'kiwi-xavier' ]
+	slug: 'jetson-xavier'
+	aliases: [ 'jetson-xavier' ]
 	name: 'Kiwi Xavier AGX'
 	arch: 'aarch64'
 	state: 'new'
 	community: true
-	private: true
+	private: false
 
 	instructions: [
 		BOARD_PREPARE

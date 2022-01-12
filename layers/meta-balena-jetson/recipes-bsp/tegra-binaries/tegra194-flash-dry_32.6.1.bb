@@ -27,13 +27,17 @@ SRC_URI = " \
 PINMUXCFG = "tegra19x-mb1-pinmux-p2888-0000-a04-p2822-0000-b01.cfg"
 PINMUXCFG_cti-rogue-xavier = "cti-rogue-32-4-3-pinmux.cfg"
 LNXSIZE ?= "67108864"
-DTBNAME = "tegra194-p2888-0001-p2822-0000"
+# DTBNAME = "tegra194-p2888-0001-p2822-0000"
+DTBNAME_kiwi-xavier = "tegra194-agx-kiwi-AGX"
+DTBNAME = "tegra194-agx-kiwi-AGX"
 DTBNAME_cti-rogue-xavier = "tegra194-agx-cti-AGX101"
 DTBNAME_nru120s-xavier = "NRU120-32-4-3"
-DTBNAME_kiwi-xavier = "tegra194-agx-kiwi-AGX"
 KERNEL_DEVICETREE = "${DEPLOY_DIR_IMAGE}/${DTBNAME}.dtb"
 DTBFILE ?= "${@os.path.basename(d.getVar('KERNEL_DEVICETREE', True).split()[0])}"
 
+BPFNAME = "tegra194-a02-bpmp-p2888-a04-kiwi"
+BPF_DEVICETREE = "${DEPLOY_DIR_IMAGE}/${BPFNAME}.dtb"
+BPFFILE ?= "${@os.path.basename(d.getVar('BPF_DEVICETREE', True).split()[0])}"
 
 IMAGE_TEGRAFLASH_FS_TYPE ??= "ext4"
 IMAGE_TEGRAFLASH_ROOTFS ?= "${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.${IMAGE_TEGRAFLASH_FS_TYPE}"
@@ -163,6 +167,12 @@ do_configure() {
     cp ./${DTBFILE} ./${DTBNAME}-rootA.dtb
     cp ./${DTBFILE} ./${DTBNAME}-rootB.dtb
 
+    echo "Copyng BPF ****************************************************************"
+    rm ${DEPLOY_DIR_IMAGE}/bootfiles/tegra194-a02-bpmp-p2888-a04.dtb
+    cp "${DEPLOY_DIR_IMAGE}/${BPFFILE}" "${DEPLOY_DIR_IMAGE}/bootfiles/tegra194-a02-bpmp-p2888-a04.dtb" 
+    rm ${DEPLOY_DIR_IMAGE}/${BPFFILE}
+    echo "BPF copied ****************************************************************"
+
     # Add rootA/rootB and save as separate dtbs to be used when
     # switching partitions
     bootargs="`fdtget ./${DTBFILE} /chosen bootargs 2>/dev/null`"
@@ -183,9 +193,7 @@ do_configure() {
 
     sed -i -e "s/\[DTB_NAME\]/$(echo ${DTBFILE} | cut -d '.' -f 1)/g" ${WORKDIR}/partition_specification194.txt
 
-    sed -i "s, DTB_NAME, ${DTBFILE},g" flash.xml.in
 
-    sed -i -e "s/\[DTB_NAME\]/$(echo ${DTBFILE} | cut -d '.' -f 1)/g" ${WORKDIR}/partition_specification194.txt
 
     # prep env for tegraflash
     rm -f ./slot_metadata.bin
