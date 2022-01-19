@@ -35,9 +35,11 @@ DTBNAME_nru120s-xavier = "NRU120-32-4-3"
 KERNEL_DEVICETREE = "${DEPLOY_DIR_IMAGE}/${DTBNAME}.dtb"
 DTBFILE ?= "${@os.path.basename(d.getVar('KERNEL_DEVICETREE', True).split()[0])}"
 
-BPFNAME = "tegra194-a02-bpmp-p2888-a04-kiwi"
-BPF_DEVICETREE = "${DEPLOY_DIR_IMAGE}/${BPFNAME}.dtb"
-BPFFILE ?= "${@os.path.basename(d.getVar('BPF_DEVICETREE', True).split()[0])}"
+# BPFNAME = "tegra194-a02-bpmp-p2888-a04-kiwi"
+# BPFNAME_OLD = "tegra194-a02-bpmp-p2888-a04"
+# BPF_DEVICETREE = "${DEPLOY_DIR_IMAGE}/${BPFNAME}.dtb"
+# BPFFILE_OLD = "tegra194-a02-bpmp-p2888-a04.dtb"
+# BPFFILE ?= "${@os.path.basename(d.getVar('BPF_DEVICETREE', True).split()[0])}"
 
 IMAGE_TEGRAFLASH_FS_TYPE ??= "ext4"
 IMAGE_TEGRAFLASH_ROOTFS ?= "${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.${IMAGE_TEGRAFLASH_FS_TYPE}"
@@ -167,17 +169,25 @@ do_configure() {
     cp ./${DTBFILE} ./${DTBNAME}-rootA.dtb
     cp ./${DTBFILE} ./${DTBNAME}-rootB.dtb
 
-    echo "Copyng BPF ****************************************************************"
-    rm ${DEPLOY_DIR_IMAGE}/bootfiles/tegra194-a02-bpmp-p2888-a04.dtb
-    cp "${DEPLOY_DIR_IMAGE}/${BPFFILE}" "${DEPLOY_DIR_IMAGE}/bootfiles/tegra194-a02-bpmp-p2888-a04.dtb" 
-    rm ${DEPLOY_DIR_IMAGE}/${BPFFILE}
-    echo "BPF copied ****************************************************************"
+    # echo "Removinga and copyng old BPF ****************************************************************"
+    # rm ${BPFFILE_OLD}
+    # rm ${DEPLOY_DIR_IMAGE}/bootfiles/${BPFFILE_OLD}
+    # cp "${DEPLOY_DIR_IMAGE}/${BPFFILE}" ./${BPFFILE}
+    # cp ./${BPFFILE} ./${BPFFILE_OLD}
 
     # Add rootA/rootB and save as separate dtbs to be used when
     # switching partitions
     bootargs="`fdtget ./${DTBFILE} /chosen bootargs 2>/dev/null`"
     fdtput -t s ./${DTBNAME}-rootA.dtb /chosen bootargs "$bootargs ${ROOTA_ARGS}"
     fdtput -t s ./${DTBNAME}-rootB.dtb /chosen bootargs "$bootargs ${ROOTB_ARGS}"
+
+    # Set PLLAON clock as parent clock for CAN1 and CAN2
+    # See https://docs.nvidia.com/jetson/l4t/index.html#page/Tegra Linux Driver Package Development Guide/clocks.html#wwpID0E0NB0HA
+    # By default parents are 0x121 0x5b 0x13a
+    for dtnode in can1 can2
+    do
+        fdtput -t x tegra194-a02-bpmp-p2888-a04.dtb "/clocks/clock@$dtnode" "allowed-parents" "121" "5b" "13a" "5e"
+    done
 
     # Make bootable image from kernel and sign it
     cp ${DEPLOY_DIR_IMAGE}/${LNXFILE} ${LNXFILE}
@@ -219,13 +229,16 @@ do_configure() {
     # has signing mandatory needs to be signed
     signfile " ${DTBNAME}-rootA.dtb"
     signfile " ${DTBNAME}-rootB.dtb"
+    # signfile " ${BPFFILE_OLD}"
 
     # Needed to embedd plain initramfs kernel and dtb to main image
     cp ${LNXFILE} ${DEPLOY_DIR_IMAGE}/bootfiles/Image
     cp -r ${DTBNAME}-root*.dtb ${DEPLOY_DIR_IMAGE}/bootfiles/
+    # cp -r ${BPFFILE_OLD} ${DEPLOY_DIR_IMAGE}/bootfiles/
     cp ${WORKDIR}/resinOS-flash194.xml ${DEPLOY_DIR_IMAGE}/bootfiles/flash.xml
     cp -r signed/* ${DEPLOY_DIR_IMAGE}/bootfiles/
     cp -r ${DTBNAME}-root*_sigheader.dtb.encrypt ${DEPLOY_DIR_IMAGE}/bootfiles/
+    # cp -r ${BPFNAME_OLD}_sigheader.dtb.encrypt ${DEPLOY_DIR_IMAGE}/bootfiles/
     dd if=/dev/zero of="${DEPLOY_DIR_IMAGE}/bootfiles/bmp.blob" bs=1K count=70
 
     # This is the Xavier boot0, which wasn't necessary for HUP from L4T 31.x to 32.3.1,
@@ -276,10 +289,13 @@ do_install() {
     # signed boot.img isn't needed in rootfs
     rm ${D}/${BINARY_INSTALL_PATH}/boot*im*
     cp ${S}/tegraflash/${DTBNAME}-rootA.dtb ${D}/${BINARY_INSTALL_PATH}/
+    # cp ${S}/tegraflash/${BPFFILE_OLD} ${D}/${BINARY_INSTALL_PATH}/
     cp ${WORKDIR}/partition_specification194.txt ${D}/${BINARY_INSTALL_PATH}/
     cp -r ${S}/tegraflash/${DTBNAME}-root*sigheader.dtb.encrypt ${D}/${BINARY_INSTALL_PATH}
+    # cp -r ${S}/tegraflash/${BPFNAME_OLD}_sigheader.dtb.encrypt ${D}/${BINARY_INSTALL_PATH}
     # When generating image, this will be default dtb containing cmdline with root set to resin-rootA
     cp ${S}/tegraflash/${DTBNAME}-rootA_sigheader.dtb.encrypt ${DEPLOY_DIR_IMAGE}/bootfiles/${DTBNAME}_sigheader.dtb.encrypt
+    # cp ${S}/tegraflash/${BPFNAME_OLD}_sigheader.dtb.encrypt ${DEPLOY_DIR_IMAGE}/bootfiles/${BPFNAME_OLD}_sigheader.dtb.encrypt
 }
 
 do_deploy() {
