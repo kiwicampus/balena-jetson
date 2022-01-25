@@ -31,6 +31,7 @@ SRC_URI:append:jetson-tx2 = " \
 SRC_URI:append:kiwi-xavier = " \
     file://tegra194-agx-kiwi-AGX.dtb \
     file://tegra194-a02-bpmp-p2888-a04-kiwi.dtb \
+    file://v4l2loopback-as-kernel-module.patch \
 "
 
 SRC_URI:append:jetson-xavier-nx-devkit-seeed-2mic-hat = " \
@@ -280,6 +281,12 @@ BALENA_CONFIGS[backlight] = " \
     CONFIG_BACKLIGHT_PWM=m \
     CONFIG_BACKLIGHT_LP855X=m \
     CONFIG_BACKLIGHT_CLASS_DEVICE=m \
+"
+
+# Add v4l2loopback module
+BALENA_CONFIGS:append:kiwi-xavier = " v4l2loopback "
+BALENA_CONFIGS[v4l2loopback] = " \
+    CONFIG_STAGING_V4L2LOOPBACK=m \
 "
 
 L4TVER=" l4tver=${L4T_VERSION}"
