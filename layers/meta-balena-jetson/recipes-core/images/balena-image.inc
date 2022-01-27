@@ -47,9 +47,7 @@ BALENA_BOOT_PARTITION_FILES:jetson-nano-emmc = "${BALENA_BOOT_PARTITION_FILES:je
 BALENA_BOOT_PARTITION_FILES:jetson-nano-2gb-devkit = "${BALENA_BOOT_PARTITION_FILES:jetson-nano}"
 
 
-do_rootfs:balenaos-img:jetson-xavier[depends] += " tegra194-flash-dry:do_deploy \
-                                                linux-tegra:do_deploy \
-"
+do_rootfs:balenaos-img:jetson-xavier[depends] += " tegra194-flash-dry:do_deploy "
 
 BALENA_BOOT_PARTITION_FILES:jetson-xavier = " \
     bootfiles/mb1_t194_prod_sigheader.bin.encrypt:/bootfiles/mb1_t194_prod_sigheader.bin.encrypt \
