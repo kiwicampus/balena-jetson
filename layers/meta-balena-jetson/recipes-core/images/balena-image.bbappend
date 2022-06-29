@@ -78,6 +78,8 @@ device_specific_configuration:jetson-nano-2gb-devkit() {
 # added from one Jetpack release to another
 DEVICE_SPECIFIC_SPACE:jetson-xavier = "458752"
 
+
+DEVICE_SPECIFIC_SPACE:kiwi-orin = "458752"
 # Binaries are signed and packed into
 # a partition and the flaser script
 # gets them from there. Can't store them
@@ -107,6 +109,33 @@ device_specific_configuration:jetson-xavier() {
     done
 
 }
+
+do_image:balenaos-img:kiwi-orin[depends] += " tegra234-flash-dry:do_deploy"
+device_specific_configuration:kiwi-orin() {
+    partitions=$(cat ${DEPLOY_DIR_IMAGE}/tegra-binaries/partition_specification234.txt)
+    NVIDIA_PART_OFFSET=20480
+    START=${NVIDIA_PART_OFFSET}
+    for n in ${partitions}; do
+      part_name=$(echo $n | cut -d ':' -f 1)
+      file_name=$(echo $n | cut -d ':' -f 2)
+      part_size=$(echo $n | cut -d ':' -f 3)
+      file_path=$(find ${DEPLOY_DIR_IMAGE}/bootfiles -name $file_name)
+      END=$(expr ${START} \+ ${part_size} \- 1)
+      echo "Will write $part_name from ${START} to ${END} part size: $part_size"
+      parted -s ${BALENA_RAW_IMG} unit B mkpart $part_name ${START} ${END}
+      # The padding partition exists to allow for the device specific space to
+      # be a multiple of 4096. We don't write anything to it for the moment.
+      if [ ! "$file_name" = "none.bin" ]; then
+        check_size ${file_path} ${part_size}
+        dd if=$file_path of=${BALENA_RAW_IMG} conv=notrunc seek=$(expr ${START} \/ 512) bs=512
+      fi
+      START=$(expr ${END} \+ 1)
+    done
+
+}
+
+
+
 
 NVIDIA_PART_OFFSET:jetson-tx2="4097"
 DEVICE_SPECIFIC_SPACE:jetson-tx2="49152"
