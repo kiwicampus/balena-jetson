@@ -29,10 +29,12 @@ SRC_URI:append:jetson-tx2 = " \
 "
 
 SRC_URI:append:kiwi-xavier = " \
-    file://tegra194-agx-kiwi-AGX.dtb \
-    file://tegra194-a02-bpmp-p2888-a04-kiwi.dtb \
+    file://tegra194_kiwi64.dtb \
 "
-# file://v4l2loopback-as-kernel-module.patch 
+
+SRC_URI:append:jetson-xavier = " \
+    file://tegra194_kiwi64.dtb \
+"
 
 SRC_URI:append:jetson-xavier-nx-devkit-seeed-2mic-hat = " \
     file://tegra194-p3668-all-p3509-0000-seeed-2mic-hat.dtb \
@@ -298,6 +300,7 @@ KERNEL_ROOTSPEC:jn30b-nano = "\${resin_kernel_root} ro rootwait"
 KERNEL_ROOTSPEC:jetson-tx2 = " \${resin_kernel_root} ro rootwait gasket.dma_bit_mask=32 pcie_aspm=off"
 KERNEL_ROOTSPEC:jetson-tx1 = " \${resin_kernel_root} ro rootwait"
 KERNEL_ROOTSPEC:jetson-xavier = ""
+KERNEL_ROOTSPEC:kiwi-xavier = ""
 KERNEL_ROOTSPEC:jetson-xavier-nx-devkit-emmc = ""
 
 # Since 32.1 on tx2, after kernel is loaded sd card becomes mmcblk2 opposed
@@ -387,7 +390,10 @@ do_deploy:append:astro-tx2() {
     cp ${WORKDIR}/tegra186-tx2-cti-ASG001-revG+.dtb "${DEPLOYDIR}"
 }
 
+do_deploy:append:jetson-xavier() {
+    cp ${WORKDIR}/tegra194_kiwi64.dtb "${DEPLOYDIR}"
+}
+
 do_deploy:append:kiwi-xavier() {
-    cp ${WORKDIR}/tegra194-agx-kiwi-AGX.dtb "${DEPLOYDIR}"
-    cp ${WORKDIR}/tegra194-a02-bpmp-p2888-a04-kiwi.dtb "${DEPLOYDIR}"
+    cp ${WORKDIR}/tegra194_kiwi64.dtb "${DEPLOYDIR}"
 }

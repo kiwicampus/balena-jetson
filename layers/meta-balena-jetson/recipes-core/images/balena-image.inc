@@ -23,8 +23,8 @@ DTBFILE:floyd-nano="tegra210-p3448-0002-p3449-0000-b00-floyd-nano.dtb"
 DTBFILE:photon-xavier-nx = "tegra194-xavier-nx-cti-NGX003.dtb"
 DTBFILE:cnx100-xavier-nx = "tegra194-xavier-nx-cnx100.dtb"
 DTBNAME:cti-rogue-xavier="tegra194-agx-cti-AGX101"
-DTBNAME:kiwi-xavier="tegra194-agx-kiwi-AGX"
-DTBNAME:jetson-xavier="tegra194-p2888-0001-p2822-0000"
+DTBNAME:kiwi-xavier="tegra194_kiwi64"
+DTBNAME:jetson-xavier="tegra194_kiwi64"
 DTBNAME:jetson-xavier-nx-devkit-seeed-2mic-hat="tegra194-p3668-all-p3509-0000-seeed-2mic-hat"
 
 # Name update files as partition names for easier updating
@@ -48,7 +48,34 @@ BALENA_BOOT_PARTITION_FILES:jetson-nano-2gb-devkit = "${BALENA_BOOT_PARTITION_FI
 
 do_rootfs:balenaos-img:jetson-xavier[depends] += " tegra194-flash-dry:do_deploy "
 
+do_rootfs:balenaos-img:kiwi-xavier[depends] += " tegra194-flash-dry:do_deploy "
+
 BALENA_BOOT_PARTITION_FILES:jetson-xavier = " \
+    bootfiles/mb1_t194_prod_sigheader.bin.encrypt:/bootfiles/mb1_t194_prod_sigheader.bin.encrypt \
+    bootfiles/spe_t194_sigheader.bin.encrypt:/bootfiles/spe_t194_sigheader.bin.encrypt \
+    bootfiles/nvtboot_t194_sigheader.bin.encrypt:/bootfiles/nvtboot_t194_sigheader.bin.encrypt \
+    bootfiles/preboot_c10_prod_cr_sigheader.bin.encrypt:/bootfiles/preboot_c10_prod_cr_sigheader.bin.encrypt \
+    bootfiles/slot_metadata.bin:/bootfiles/slot_metadata.bin \
+    bootfiles/bmp.blob:/bootfiles/bmp.blob \
+    bootfiles/mce_c10_prod_cr_sigheader.bin.encrypt:/bootfiles/mce_c10_prod_cr_sigheader.bin.encrypt \
+    bootfiles/mts_c10_prod_cr_sigheader.bin.encrypt:/bootfiles/mts_c10_prod_cr_sigheader.bin.encrypt \
+    bootfiles/cboot_t194_sigheader.bin.encrypt:/bootfiles/cboot_t194_sigheader.bin.encrypt \
+    bootfiles/tos-trusty_t194_sigheader.img.encrypt:/bootfiles/tos-trusty_t194_sigheader.img.encrypt \
+    bootfiles/eks_sigheader.img.encrypt:/bootfiles/eks_sigheader.img.encrypt \
+    bootfiles/bpmp_t194_sigheader.bin.encrypt:/bootfiles/bpmp_t194_sigheader.bin.encrypt \
+    bootfiles/tegra194-a02-bpmp-p2888-a04_sigheader.dtb.encrypt:/bootfiles/tegra194-a02-bpmp-p2888-a04_sigheader.dtb.encrypt \
+    bootfiles/xusb_sil_rel_fw:/bootfiles/xusb_sil_rel_fw \
+    bootfiles/camera-rtcpu-rce_sigheader.img.encrypt:/bootfiles/camera-rtcpu-rce_sigheader.img.encrypt \
+    bootfiles/adsp-fw_sigheader.bin.encrypt:/bootfiles/adsp-fw_sigheader.bin.encrypt \
+    bootfiles/warmboot_t194_prod_sigheader.bin.encrypt:/bootfiles/warmboot_t194_prod_sigheader.bin.encrypt \
+    bootfiles/boot_sigheader.img.encrypt:/bootfiles/boot_sigheader.img.encrypt \
+    bootfiles/${DTBNAME}-rootA_sigheader.dtb.encrypt:/bootfiles/${DTBNAME}-rootA_sigheader.dtb.encrypt \
+    bootfiles/${DTBNAME}-rootB_sigheader.dtb.encrypt:/bootfiles/${DTBNAME}-rootB_sigheader.dtb.encrypt \
+    bootfiles/boot0.img:/bootfiles/boot0.img \
+    tegra-binaries/partition_specification194.txt:/bootfiles/partition_specification194.txt \
+"
+
+BALENA_BOOT_PARTITION_FILES:kiwi-xavier = " \
     bootfiles/mb1_t194_prod_sigheader.bin.encrypt:/bootfiles/mb1_t194_prod_sigheader.bin.encrypt \
     bootfiles/spe_t194_sigheader.bin.encrypt:/bootfiles/spe_t194_sigheader.bin.encrypt \
     bootfiles/nvtboot_t194_sigheader.bin.encrypt:/bootfiles/nvtboot_t194_sigheader.bin.encrypt \
@@ -92,6 +119,7 @@ BALENA_BOOT_SIZE:jetson-nano = "80960"
 BALENA_BOOT_SIZE:jetson-nano-2gb-devkit = "80960"
 BALENA_BOOT_SIZE:jetson-nano-emmc = "80960"
 BALENA_BOOT_SIZE:jetson-xavier = "121440"
+BALENA_BOOT_SIZE:kiwi-xavier = "121440"
 BALENA_BOOT_SIZE:jetson-xavier-nx-devkit-emmc = "121440"
 BALENA_BOOT_SIZE:jetson-xavier-nx-devkit = "121440"
 BALENA_BOOT_SIZE:jetson-tx2="80960"
@@ -111,6 +139,17 @@ IMAGE_INSTALL:append:jetson-nano-emmc = "${IMAGE_PACKAGES_NANO}"
 IMAGE_INSTALL:append:jetson-nano-2gb-devkit = "${IMAGE_PACKAGES_NANO}"
 
 IMAGE_INSTALL:append:jetson-xavier = " \
+    tegra194-flash-dry \
+    fan-startup \
+    parted \
+    gptfdisk \
+    tegra-nvpmodel \
+    tegra-configs-nvstartup \
+    tegra-configs-udev \
+    tegra-boot-tools \
+"
+
+IMAGE_INSTALL:append:kiwi-xavier = " \
     tegra194-flash-dry \
     fan-startup \
     parted \
