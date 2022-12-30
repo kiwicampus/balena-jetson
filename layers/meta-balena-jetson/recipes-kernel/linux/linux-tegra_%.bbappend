@@ -12,9 +12,9 @@ SRC_URI:append = " \
     file://0001-Support-referencing-the-root-partition-label-from-GP.patch \
     file://xhci-ring-Don-t-show-incorrect-WARN-message-about.patch \
     file://0001-dont-export-rpmb-as-part.patch \
+    file://0002-Update-qmi_wwan-to-kernel-4.14.patch \
 "
-#    file://0002-qmi_wwan-Update-from-4.14-kernel.patch 
-#"
+
 SRC_URI:append:jetson-tx2 = " \
     file://0001-Expose-spidev-to-the-userspace.patch \
     file://0002-mttcan-ivc-enable.patch \
@@ -26,18 +26,16 @@ SRC_URI:append:jetson-tx2 = " \
     file://realsense_powerlinefrequency_control_fix_linux-yocto_4.4.patch \
     file://0001-mttcan_ivc-Fix-build-failure-with-kernel-4.9.patch \
     file://0001-gasket-Backport-gasket-driver-from-linux-coral.patch \
+    file://0011-Import-rtl88x2CE_WiFi_linux_v5.12.1.8-2-g58609677a.2.patch \
+    file://0012-rtl8822ce-fix-compilation-errors.patch \
+    file://0013-nvidia-net-wireless-realtek-clean-up-indentation-iss.patch \
+    file://0014-realtek-rtl8822ce-Enable-802.11D-and-802.11K.patch \
+    file://0015-drivers-bluetooth-realtek-Update-rtk_bt-to-5.12.1.8.patch \
+    file://0016-rtl8822ce-core-Fix-build-comment-unused-function.patch \
 "
 
 SRC_URI:append:jetson-xavier-nx-devkit-seeed-2mic-hat = " \
     file://tegra194-p3668-all-p3509-0000-seeed-2mic-hat.dtb \
-"
-
-SRC_URI:append:cti-rogue-xavier = " \
-    file://tegra194-agx-cti-AGX101.dtb \
-"
-
-SRC_URI:append:nru120s-xavier = " \
-    file://NRU120-32-4-3.dtb \
 "
 
 SRC_URI:append:astro-tx2 = " \
@@ -60,18 +58,20 @@ SRC_URI:append:jetson-nano-emmc = " \
     file://nano-mark-gpio-as-disabled-when-freed.patch \
     file://0001-gasket-Backport-gasket-driver-from-linux-coral.patch \
     file://nvidia-platform-t210-enable-SPI0-pins-on-40-pin-head.patch \
+    file://tegra210-p3448-0002-p3449-0000-b00-auvidea-jn30d.dtb \
 "
 
 SRC_URI:append:photon-nano = " \
     file://0001-cti-photon-merge-CDC-MBIM-driver-changes-from-bsp.patch \
     file://tegra210-nano-cti-NGX003.dtb \
+    file://tegra210-nano-cti-NGX004.dtb \
 "
 
 SRC_URI:append:photon-tx2-nx = " \
     file://0001-cti-photon-merge-CDC-MBIM-driver-changes-from-bsp.patch \
     file://tegra186-tx2-nx-cti-NGX003.dtb \
     file://tegra186-tx2-nx-cti-NGX003-IMX219-2CAM.dtb \
-    file://tegra186-tx2-nx-cti-NGX003-IMX477-2CAM.dtb \
+    file://tegra186-tx2-nx-cti-NGX003-ARDU-IMX477-2CAM.dtb \
 "
 
 SRC_URI:append:photon-xavier-nx = " \
@@ -81,6 +81,10 @@ SRC_URI:append:photon-xavier-nx = " \
 
 SRC_URI:append:cnx100-xavier-nx = " \
     file://tegra194-xavier-nx-cnx100.dtb \
+"
+
+SRC_URI:append:jetson-tx2-nx-devkit = " \
+    file://tegra186-p3636-0001-p3509-0000-a01-auvidea-jn30d.dtb \
 "
 
 TEGRA_INITRAMFS_INITRD = "0"
@@ -181,11 +185,11 @@ BALENA_CONFIGS_DEPS[gamepad] = " \
 
 BALENA_CONFIGS:append:jetson-tx2 = " can"
 BALENA_CONFIGS[can] = " \
-                CONFIG_CAN=m \
-                CONFIG_CAN_RAW=m \
-                CONFIG_CAN_DEV=m \
-                CONFIG_MTTCAN=m \
-                CONFIG_MTTCAN_IVC=m \
+                CONFIG_CAN=y \
+                CONFIG_CAN_RAW=y \
+                CONFIG_CAN_DEV=y \
+                CONFIG_MTTCAN=n \
+                CONFIG_MTTCAN_IVC=y \
 "
 
 BALENA_CONFIGS:append:jetson-tx2 = " gasket"
@@ -255,7 +259,7 @@ BALENA_CONFIGS[cfginput] = " \
 		CONFIG_INPUT_KEYCHORD=m \
 "
 
-BALENA_CONFIGS:append:jetson-xavier-nx-devkit = " rtl8822ce "
+BALENA_CONFIGS:append = " rtl8822ce "
 BALENA_CONFIGS[rtl8822ce] = " \
 		CONFIG_RTL8822CE=m \
 		CONFIG_RTK_BTUSB=m \
@@ -267,8 +271,11 @@ BALENA_CONFIGS[rtl8822ce] = " \
 BALENA_CONFIGS:append = " nfsfs backlight "
 BALENA_CONFIGS[nfsfs] = " \
     CONFIG_NFS_FS=m \
-    CONFIG_NFS_V2=m \
-    CONFIG_NFS_V3=m \
+    CONFIG_NFS_V2=y \
+    CONFIG_NFS_V3=y \
+    CONFIG_NFS_V4=y \
+    CONFIG_NFSD_V3=y \
+    CONFIG_NFSD_V4=y \
 "
 
 BALENA_CONFIGS[backlight] = " \
@@ -353,12 +360,13 @@ do_deploy:append:jn30b-nano() {
 
 do_deploy:append:photon-nano() {
     cp ${WORKDIR}/tegra210-nano-cti-NGX003.dtb "${DEPLOYDIR}"
+    cp ${WORKDIR}/tegra210-nano-cti-NGX004.dtb "${DEPLOYDIR}"
 }
 
 do_deploy:append:photon-tx2-nx() {
     cp ${WORKDIR}/tegra186-tx2-nx-cti-NGX003.dtb "${DEPLOYDIR}"
     cp ${WORKDIR}/tegra186-tx2-nx-cti-NGX003-IMX219-2CAM.dtb "${DEPLOYDIR}"
-    cp ${WORKDIR}/tegra186-tx2-nx-cti-NGX003-IMX477-2CAM.dtb "${DEPLOYDIR}"
+    cp ${WORKDIR}/tegra186-tx2-nx-cti-NGX003-ARDU-IMX477-2CAM.dtb "${DEPLOYDIR}"
 }
 
 do_deploy:append:photon-xavier-nx() {
@@ -373,10 +381,3 @@ do_deploy:append:astro-tx2() {
     cp ${WORKDIR}/tegra186-tx2-cti-ASG001-revG+.dtb "${DEPLOYDIR}"
 }
 
-do_deploy:append:cti-rogue-xavier() {
-    cp ${WORKDIR}/tegra194-agx-cti-AGX101.dtb "${DEPLOYDIR}"
-}
-
-do_deploy:append:nru120s-xavier() {
-    cp ${WORKDIR}/NRU120-32-4-3.dtb "${DEPLOYDIR}"
-}
