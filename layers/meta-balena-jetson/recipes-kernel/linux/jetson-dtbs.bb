@@ -29,6 +29,8 @@ do_install[depends] += " linux-tegra:do_deploy "
 
 S = "${WORKDIR}"
 DTBNAME = "${@os.path.basename(d.getVar('KERNEL_DEVICETREE', True).split()[0])}"
+BPMP_DTBNAME = "${@os.path.basename(d.getVar('BPMP_DEVICETREE', True).split()[0])}"
+
 
 do_install:jetson-tx2() {
 	install -d ${D}/boot/

@@ -29,10 +29,13 @@ SRC_URI = " \
 PINMUXCFG = "tegra19x-mb1-pinmux-p2888-0000-a04-p2822-0000-b01.cfg"
 LNXSIZE ?= "67108864"
 # DTBNAME = "tegra194-p2888-0001-p2822-0000"
-DTBNAME_kiwi-xavier = "tegra194-agx-kiwi-AGX"
 DTBNAME = "tegra194_kiwi64"
 KERNEL_DEVICETREE = "${DEPLOY_DIR_IMAGE}/${DTBNAME}.dtb"
 DTBFILE ?= "${@os.path.basename(d.getVar('KERNEL_DEVICETREE', True).split()[0])}"
+
+BPMP_DTBNAME = "kiwi_bpmp"
+BPMP_DEVICETREE = "${DEPLOY_DIR_IMAGE}/${BPMP_DTBNAME}.dtb"
+BPMP_DTBFILE ?= "${@os.path.basename(d.getVar('BPMP_DEVICETREE', True).split()[0])}"
 
 IMAGE_TEGRAFLASH_FS_TYPE ??= "ext4"
 IMAGE_TEGRAFLASH_ROOTFS ?= "${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.${IMAGE_TEGRAFLASH_FS_TYPE}"
@@ -92,7 +95,7 @@ signfile() {
         mts_mce mce_c10_prod_cr.bin; \
         mts_proper mts_c10_prod_cr.bin;
         bpmp_fw bpmp_t194.bin; \
-        bpmp_fw_dtb tegra194-a02-bpmp-p2888-a04.dtb; \
+        bpmp_fw_dtb ${BPMP_DTBFILE}; \
         spe_fw spe_t194.bin; \
         tlk tos-trusty_t194.img; \
         eks eks.img; \
@@ -162,11 +165,7 @@ do_configure() {
     cp ./${DTBFILE} ./${DTBNAME}-rootA.dtb
     cp ./${DTBFILE} ./${DTBNAME}-rootB.dtb
 
-    # echo "Removinga and copyng old BPF ****************************************************************"
-    # rm ${BPFFILE_OLD}
-    # rm ${DEPLOY_DIR_IMAGE}/bootfiles/${BPFFILE_OLD}
-    # cp "${DEPLOY_DIR_IMAGE}/${BPFFILE}" ./${BPFFILE}
-    # cp ./${BPFFILE} ./${BPFFILE_OLD}
+    cp "${DEPLOY_DIR_IMAGE}/${BPMP_DTBFILE}" ./${BPMP_DTBFILE}
 
     # Add rootA/rootB and save as separate dtbs to be used when
     # switching partitions
@@ -177,10 +176,10 @@ do_configure() {
     # Set PLLAON clock as parent clock for CAN1 and CAN2
     # See https://docs.nvidia.com/jetson/l4t/index.html#page/Tegra Linux Driver Package Development Guide/clocks.html#wwpID0E0NB0HA
     # By default parents are 0x121 0x5b 0x13a
-    for dtnode in can1 can2
-    do
-        fdtput -t x tegra194-a02-bpmp-p2888-a04.dtb "/clocks/clock@$dtnode" "allowed-parents" "121" "5b" "13a" "5e"
-    done
+    # for dtnode in can1 can2
+    # do
+    #     fdtput -t x tegra194-a02-bpmp-p2888-0005-a04.dtb "/clocks/clock@can1" "allowed-parents" "121" "5b" "13a" "5e"
+    # done
 
     # Make bootable image from kernel and sign it
     cp ${DEPLOY_DIR_IMAGE}/${LNXFILE} ${LNXFILE}
@@ -193,9 +192,11 @@ do_configure() {
     # prepare flash.xml.in to be used in signing
     cp ${WORKDIR}/resinOS-flash194.xml flash.xml.in
     sed -i "s, DTB_NAME, ${DTBFILE},g" flash.xml.in
+    sed -i "s, BPMP_DTB_NAME, ${BPMP_DTBFILE},g" flash.xml.in
+
 
     sed -i -e "s/\[DTB_NAME\]/$(echo ${DTBFILE} | cut -d '.' -f 1)/g" ${WORKDIR}/partition_specification194.txt
-
+    sed -i -e "s/\[BPMP_DTB_NAME\]/$(echo ${BPMP_DTBFILE} | cut -d '.' -f 1)/g" ${WORKDIR}/partition_specification194.txt
 
 
     # prep env for tegraflash
@@ -221,15 +222,16 @@ do_configure() {
     # has signing mandatory needs to be signed
     signfile " ${DTBNAME}-rootA.dtb"
     signfile " ${DTBNAME}-rootB.dtb"
-    # signfile " ${BPFFILE_OLD}"
+    signfile " ${BPMP_DTBNAME}.dtb"
 
     # Needed to embedd plain initramfs kernel and dtb to main image
     cp ${LNXFILE} ${DEPLOY_DIR_IMAGE}/bootfiles/Image
     cp -r ${DTBNAME}-root*.dtb ${DEPLOY_DIR_IMAGE}/bootfiles/
-    # cp -r ${BPFFILE_OLD} ${DEPLOY_DIR_IMAGE}/bootfiles/
+    cp -r ${BPMP_DTBNAME}.dtb ${DEPLOY_DIR_IMAGE}/bootfiles/
     cp ${WORKDIR}/resinOS-flash194.xml ${DEPLOY_DIR_IMAGE}/bootfiles/flash.xml
     cp -r signed/* ${DEPLOY_DIR_IMAGE}/bootfiles/
     cp -r ${DTBNAME}-root*_sigheader.dtb.encrypt ${DEPLOY_DIR_IMAGE}/bootfiles/
+    cp -r ${BPMP_DTBNAME}_sigheader.dtb.encrypt ${DEPLOY_DIR_IMAGE}/bootfiles/
     dd if=/dev/zero of="${DEPLOY_DIR_IMAGE}/bootfiles/bmp.blob" bs=1K count=1
 
     # This is the Xavier boot0, which wasn't necessary for HUP from L4T 31.x to 32.3.1,
@@ -303,13 +305,14 @@ do_install() {
     cp -r ${S}/tegraflash/signed/* ${D}/${BINARY_INSTALL_PATH}
     rm ${D}/${BINARY_INSTALL_PATH}/boot*im*
     cp ${S}/tegraflash/${DTBNAME}-rootA.dtb ${D}/${BINARY_INSTALL_PATH}/
+    cp ${S}/tegraflash/${BPMP_DTBNAME}.dtb ${D}/${BINARY_INSTALL_PATH}/
     cp ${DEPLOY_DIR_IMAGE}/bootfiles/boot_sigheader.img.encrypt ${D}/${BINARY_INSTALL_PATH}/
     cp ${WORKDIR}/partition_specification194.txt ${D}/${BINARY_INSTALL_PATH}/
     cp -r ${S}/tegraflash/${DTBNAME}-root*sigheader.dtb.encrypt ${D}/${BINARY_INSTALL_PATH}
-    # cp -r ${S}/tegraflash/${BPFNAME_OLD}_sigheader.dtb.encrypt ${D}/${BINARY_INSTALL_PATH}
+    cp -r ${S}/tegraflash/${BPMP_DTBNAME}_sigheader.dtb.encrypt ${D}/${BINARY_INSTALL_PATH}
     # When generating image, this will be default dtb containing cmdline with root set to resin-rootA
     cp ${S}/tegraflash/${DTBNAME}-rootA_sigheader.dtb.encrypt ${DEPLOY_DIR_IMAGE}/bootfiles/${DTBNAME}_sigheader.dtb.encrypt
-    # cp ${S}/tegraflash/${BPFNAME_OLD}_sigheader.dtb.encrypt ${DEPLOY_DIR_IMAGE}/bootfiles/${BPFNAME_OLD}_sigheader.dtb.encrypt
+    cp ${S}/tegraflash/${BPMP_DTBNAME}_sigheader.dtb.encrypt ${DEPLOY_DIR_IMAGE}/bootfiles/${BPMP_DTBNAME}_sigheader.dtb.encrypt
 }
 
 do_deploy() {

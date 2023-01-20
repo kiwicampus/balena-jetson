@@ -12,8 +12,8 @@ eks:eks_sigheader.img.encrypt:131072
 eks_b:eks_sigheader.img.encrypt:131072
 bpmp-fw:bpmp_t194_sigheader.bin.encrypt:1048576
 bpmp-fw_b:bpmp_t194_sigheader.bin.encrypt:1048576
-bpmp-fw-dtb:tegra194-a02-bpmp-p2888-a04_sigheader.dtb.encrypt:1048576
-bpmp-fw-dtb_b:tegra194-a02-bpmp-p2888-a04_sigheader.dtb.encrypt:1048576
+bpmp-fw-dtb:[BPMP_DTB_NAME]_sigheader.dtb.encrypt:1048576
+bpmp-fw-dtb_b:[BPMP_DTB_NAME]_sigheader.dtb.encrypt:1048576
 xusb-fw:xusb_sil_rel_fw:262144
 xusb-fw_b:xusb_sil_rel_fw:262144
 rce-fw:camera-rtcpu-rce_sigheader.img.encrypt:524288

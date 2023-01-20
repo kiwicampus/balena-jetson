@@ -40,6 +40,7 @@ SRC_URI:append:kiwi-xavier = " \
 
 SRC_URI:append:jetson-xavier = " \
     file://tegra194_kiwi64.dtb \
+    file://kiwi_bpmp.dtb \
 "
 
 SRC_URI:append:jetson-xavier-nx-devkit-seeed-2mic-hat = " \
@@ -398,6 +399,7 @@ do_deploy:append:astro-tx2() {
 
 do_deploy:append:jetson-xavier() {
     cp ${WORKDIR}/tegra194_kiwi64.dtb "${DEPLOYDIR}"
+    cp ${WORKDIR}/kiwi_bpmp.dtb "${DEPLOYDIR}"
 }
 
 do_deploy:append:kiwi-xavier() {

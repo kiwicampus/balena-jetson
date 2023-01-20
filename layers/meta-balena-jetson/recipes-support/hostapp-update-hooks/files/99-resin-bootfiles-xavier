@@ -111,6 +111,9 @@ info_log "New root is resin-root${rootl}"
 
 dtbname=$(cat "$partspec" | grep "kernel-dtb_b" | cut -d ':' -f 2 | awk -F'_sigheader' '{print $1}')
 dtbfile="${dtbname}-root${rootl}_sigheader.dtb.encrypt"
+
+bpmp_dtbname=$(cat "$partspec" | grep "bpmp-fw-dtb" | cut -d ':' -f 2 | awk -F'_sigheader' '{print $1}')
+bpmp_dtbfile="${bpmp_dtbname}_sigheader.dtb.encrypt"
 kernel="boot_sigheader.img.encrypt"
 partitions=$(cat "${partspec}")
 
@@ -156,6 +159,12 @@ dd if=/resin-boot/bootfiles/${dtbfile} of=$(get_state_path_from_label "bootloade
 
 info_log "Writing ${dtbfile} to specific to bootloader-dtb_b partition."
 dd if=/resin-boot/bootfiles/${dtbfile} of=$(get_state_path_from_label "bootloader-dtb_b")
+
+info_log "Writing ${bpmp_dtbfile} to specific to bootloader-dtb partition."
+dd if=/resin-boot/bootfiles/${bpmp_dtbfile} of=$(get_state_path_from_label "bpmp-fw-dtb")
+
+info_log "Writing ${bpmp_dtbfile} to specific to bootloader-dtb_b partition."
+dd if=/resin-boot/bootfiles/${bpmp_dtbfile} of=$(get_state_path_from_label "bpmp-fw-dtb_b")
 
 dd if=/resin-boot/bootfiles/${dtbfile} of=$(get_state_path_from_label "kernel-dtb${target_label_suffix}")
 

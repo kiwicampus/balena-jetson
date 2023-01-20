@@ -13,6 +13,8 @@ do_rootfs:balenaos-img:jetson-nano-2gb-devkit[depends] += " tegra210-flash:do_de
 "
 
 DTBFILE ?= "${@os.path.basename(d.getVar('KERNEL_DEVICETREE', True).split()[0])}"
+BPMP_DTBFILE ?= "${@os.path.basename(d.getVar('BPMP_DEVICETREE', True).split()[0])}"
+
 DTBFILE:jetson-nano = "tegra210-p3448-0000-p3449-0000-b00.dtb"
 DTBFILE:jetson-nano-emmc = "tegra210-p3448-0002-p3449-0000-b00.dtb"
 DTBFILE:jetson-nano-2gb-devkit = "tegra210-p3448-0003-p3542-0000.dtb"
@@ -25,6 +27,7 @@ DTBFILE:cnx100-xavier-nx = "tegra194-xavier-nx-cnx100.dtb"
 DTBNAME:cti-rogue-xavier="tegra194-agx-cti-AGX101"
 DTBNAME:kiwi-xavier="tegra194_kiwi64"
 DTBNAME:jetson-xavier="tegra194_kiwi64"
+BPMP_DTBNAME:jetson-xavier="kiwi_bpmp"
 DTBNAME:jetson-xavier-nx-devkit-seeed-2mic-hat="tegra194-p3668-all-p3509-0000-seeed-2mic-hat"
 
 # Name update files as partition names for easier updating
@@ -63,7 +66,7 @@ BALENA_BOOT_PARTITION_FILES:jetson-xavier = " \
     bootfiles/tos-trusty_t194_sigheader.img.encrypt:/bootfiles/tos-trusty_t194_sigheader.img.encrypt \
     bootfiles/eks_sigheader.img.encrypt:/bootfiles/eks_sigheader.img.encrypt \
     bootfiles/bpmp_t194_sigheader.bin.encrypt:/bootfiles/bpmp_t194_sigheader.bin.encrypt \
-    bootfiles/tegra194-a02-bpmp-p2888-a04_sigheader.dtb.encrypt:/bootfiles/tegra194-a02-bpmp-p2888-a04_sigheader.dtb.encrypt \
+    bootfiles/${BPMP_DTBNAME}_sigheader.dtb.encrypt:/bootfiles/${BPMP_DTBNAME}_sigheader.dtb.encrypt \
     bootfiles/xusb_sil_rel_fw:/bootfiles/xusb_sil_rel_fw \
     bootfiles/camera-rtcpu-rce_sigheader.img.encrypt:/bootfiles/camera-rtcpu-rce_sigheader.img.encrypt \
     bootfiles/adsp-fw_sigheader.bin.encrypt:/bootfiles/adsp-fw_sigheader.bin.encrypt \
@@ -87,7 +90,7 @@ BALENA_BOOT_PARTITION_FILES:kiwi-xavier = " \
     bootfiles/tos-trusty_t194_sigheader.img.encrypt:/bootfiles/tos-trusty_t194_sigheader.img.encrypt \
     bootfiles/eks_sigheader.img.encrypt:/bootfiles/eks_sigheader.img.encrypt \
     bootfiles/bpmp_t194_sigheader.bin.encrypt:/bootfiles/bpmp_t194_sigheader.bin.encrypt \
-    bootfiles/tegra194-a02-bpmp-p2888-a04_sigheader.dtb.encrypt:/bootfiles/tegra194-a02-bpmp-p2888-a04_sigheader.dtb.encrypt \
+    bootfiles/${BPMP_DTBNAME}_sigheader.dtb.encrypt:/bootfiles/${BPMP_DTBNAME}_sigheader.dtb.encrypt \
     bootfiles/xusb_sil_rel_fw:/bootfiles/xusb_sil_rel_fw \
     bootfiles/camera-rtcpu-rce_sigheader.img.encrypt:/bootfiles/camera-rtcpu-rce_sigheader.img.encrypt \
     bootfiles/adsp-fw_sigheader.bin.encrypt:/bootfiles/adsp-fw_sigheader.bin.encrypt \
