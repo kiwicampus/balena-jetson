@@ -32,6 +32,11 @@ SRC_URI:append:jetson-tx2 = " \
     file://0014-realtek-rtl8822ce-Enable-802.11D-and-802.11K.patch \
     file://0015-drivers-bluetooth-realtek-Update-rtk_bt-to-5.12.1.8.patch \
     file://0016-rtl8822ce-core-Fix-build-comment-unused-function.patch \
+    file://0017-rtl8822ce-os_dep-Fix-rssi-monitor-event-behavior.patch \
+"
+
+SRC_URI:append:jetson-xavier = " \
+    file://0001-use-pllaon-as-clock-source-for-mttcan1-and-mttcan2.patch \
 "
 
 SRC_URI:append:jetson-xavier-nx-devkit-seeed-2mic-hat = " \
@@ -271,9 +276,9 @@ BALENA_CONFIGS[rtl8822ce] = " \
 BALENA_CONFIGS:append = " nfsfs backlight "
 BALENA_CONFIGS[nfsfs] = " \
     CONFIG_NFS_FS=m \
-    CONFIG_NFS_V2=y \
-    CONFIG_NFS_V3=y \
-    CONFIG_NFS_V4=y \
+    CONFIG_NFS_V2=m \
+    CONFIG_NFS_V3=m \
+    CONFIG_NFS_V4=m \
     CONFIG_NFSD_V3=y \
     CONFIG_NFSD_V4=y \
 "
@@ -282,6 +287,11 @@ BALENA_CONFIGS[backlight] = " \
     CONFIG_BACKLIGHT_PWM=m \
     CONFIG_BACKLIGHT_LP855X=m \
     CONFIG_BACKLIGHT_CLASS_DEVICE=m \
+"
+
+BALENA_CONFIGS:append:jetson-tx2 = " optimize-size"
+BALENA_CONFIGS[optimize-size] = " \
+    CONFIG_CC_OPTIMIZE_FOR_SIZE=y \
 "
 
 L4TVER=" l4tver=${L4T_VERSION}"
