@@ -39,6 +39,12 @@ SRC_URI:append:jetson-xavier = " \
     file://0001-use-pllaon-as-clock-source-for-mttcan1-and-mttcan2.patch \
 "
 
+SRC_URI:append:kiwi-xavier = " \
+    file://tegra194-agx-kiwi-AGX.dtb \
+    file://tegra194-a02-bpmp-p2888-a04-kiwi.dtb \
+"
+# file://v4l2loopback-as-kernel-module.patch 
+
 SRC_URI:append:jetson-xavier-nx-devkit-seeed-2mic-hat = " \
     file://tegra194-p3668-all-p3509-0000-seeed-2mic-hat.dtb \
 "
@@ -289,6 +295,11 @@ BALENA_CONFIGS[backlight] = " \
     CONFIG_BACKLIGHT_CLASS_DEVICE=m \
 "
 
+# # Add v4l2loopback module
+# BALENA_CONFIGS:append:kiwi-xavier = " v4l2loopback "
+# BALENA_CONFIGS[v4l2loopback] = " \
+#     CONFIG_STAGING_V4L2LOOPBACK=m \
+# "
 BALENA_CONFIGS:append:jetson-tx2 = " optimize-size"
 BALENA_CONFIGS[optimize-size] = " \
     CONFIG_CC_OPTIMIZE_FOR_SIZE=y \
@@ -391,3 +402,15 @@ do_deploy:append:astro-tx2() {
     cp ${WORKDIR}/tegra186-tx2-cti-ASG001-revG+.dtb "${DEPLOYDIR}"
 }
 
+do_deploy:append:kiwi-xavier() {
+    cp ${WORKDIR}/tegra194-agx-kiwi-AGX.dtb "${DEPLOYDIR}"
+    cp ${WORKDIR}/tegra194-a02-bpmp-p2888-a04-kiwi.dtb "${DEPLOYDIR}"
+}
+
+do_deploy:append:cti-rogue-xavier() {
+    cp ${WORKDIR}/tegra194-agx-cti-AGX101.dtb "${DEPLOYDIR}"
+}
+
+do_deploy:append:nru120s-xavier() {
+    cp ${WORKDIR}/NRU120-32-4-3.dtb "${DEPLOYDIR}"
+}
