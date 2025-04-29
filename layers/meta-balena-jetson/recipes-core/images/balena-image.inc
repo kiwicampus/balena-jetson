@@ -26,10 +26,12 @@ DTBNAME:cti-rogue-xavier="tegra194-agx-cti-AGX101"
 DTBNAME:kiwi-xavier="tegra194-agx-kiwi-AGX"
 DTBNAME:jetson-xavier="tegra194-p2888-0001-p2822-0000"
 DTBNAME:jetson-xavier-nx-devkit-seeed-2mic-hat="tegra194-p3668-all-p3509-0000-seeed-2mic-hat"
-DTBNAME:nru120s-xavier="NRU120-32-4-3"
 
-# Name update files as partition names for easier updating
-BALENA_BOOT_PARTITION_FILES:jetson-nano = " \
+BALENA_BOOT_PARTITION_FILES:append = " \
+    dispatcher.d/50-sample-script:/dispatcher.d/50-sample-script \
+"
+
+NANO_BOOT_PARTITION_FILES = " \
     bootfiles/nvtboot_cpu.bin.encrypt:/bootfiles/TBC \
     bootfiles/${DTBFILE}.encrypt:/bootfiles/RP1 \
     bootfiles/cboot.bin.encrypt:/bootfiles/EBT \
@@ -43,13 +45,15 @@ BALENA_BOOT_PARTITION_FILES:jetson-nano = " \
     bootfiles/bmp.blob:/bootfiles/BMP \
 "
 
-BALENA_BOOT_PARTITION_FILES:jetson-nano-emmc = "${BALENA_BOOT_PARTITION_FILES:jetson-nano}"
-BALENA_BOOT_PARTITION_FILES:jetson-nano-2gb-devkit = "${BALENA_BOOT_PARTITION_FILES:jetson-nano}"
+# Name update files as partition names for easier updating
+BALENA_BOOT_PARTITION_FILES:append:jetson-nano = " ${NANO_BOOT_PARTITION_FILES} "
+BALENA_BOOT_PARTITION_FILES:append:jetson-nano-emmc = "${NANO_BOOT_PARTITION_FILES}"
+BALENA_BOOT_PARTITION_FILES:append:jetson-nano-2gb-devkit = "${NANO_BOOT_PARTITION_FILES}"
 
 
 do_rootfs:balenaos-img:jetson-xavier[depends] += " tegra194-flash-dry:do_deploy "
 
-BALENA_BOOT_PARTITION_FILES:jetson-xavier = " \
+BALENA_BOOT_PARTITION_FILES:append:jetson-xavier = " \
     bootfiles/mb1_t194_prod_sigheader.bin.encrypt:/bootfiles/mb1_t194_prod_sigheader.bin.encrypt \
     bootfiles/spe_t194_sigheader.bin.encrypt:/bootfiles/spe_t194_sigheader.bin.encrypt \
     bootfiles/nvtboot_t194_sigheader.bin.encrypt:/bootfiles/nvtboot_t194_sigheader.bin.encrypt \
@@ -67,10 +71,9 @@ BALENA_BOOT_PARTITION_FILES:jetson-xavier = " \
     bootfiles/camera-rtcpu-rce_sigheader.img.encrypt:/bootfiles/camera-rtcpu-rce_sigheader.img.encrypt \
     bootfiles/adsp-fw_sigheader.bin.encrypt:/bootfiles/adsp-fw_sigheader.bin.encrypt \
     bootfiles/warmboot_t194_prod_sigheader.bin.encrypt:/bootfiles/warmboot_t194_prod_sigheader.bin.encrypt \
-    bootfiles/boot_sigheader.img.encrypt:/bootfiles/boot_sigheader.img.encrypt \
     bootfiles/${DTBNAME}-rootA_sigheader.dtb.encrypt:/bootfiles/${DTBNAME}-rootA_sigheader.dtb.encrypt \
     bootfiles/${DTBNAME}-rootB_sigheader.dtb.encrypt:/bootfiles/${DTBNAME}-rootB_sigheader.dtb.encrypt \
-    bootfiles/boot0.img:/bootfiles/boot0.img \
+    bootfiles/boot0_t194.bin.gz:/bootfiles/boot0_t194.bin.gz \
     tegra-binaries/partition_specification194.txt:/bootfiles/partition_specification194.txt \
 "
 
@@ -98,8 +101,6 @@ BALENA_BOOT_SIZE:jetson-xavier-nx-devkit = "121440"
 BALENA_BOOT_SIZE:jetson-tx2="80960"
 BALENA_BOOT_SIZE:jetson-tx1="80960"
 
-PARTITION_TABLE_TYPE = "gpt"
-
 IMAGE_PACKAGES_NANO = " \
     tegra210-flash \
     tegra-nvpmodel \
@@ -121,6 +122,7 @@ IMAGE_INSTALL:append:jetson-xavier = " \
     tegra-nvpmodel \
     tegra-configs-nvstartup \
     tegra-configs-udev \
+    tegra-boot-tools \
 "
 
 IMAGE_INSTALL:append:jetson-xavier-nx-devkit-emmc = " \
@@ -130,7 +132,12 @@ IMAGE_INSTALL:append:jetson-xavier-nx-devkit-emmc = " \
     tegra-nvpmodel \
     tegra-configs-nvstartup \
     tegra-configs-udev \
+    tegra-wifi \
+    tegra-bluetooth \
+    tegra-firmware-rtl8822 \
+    tegra-udrm-probeconf \
     mtd-utils \
+    tegra-boot-tools \
 "
 
 IMAGE_INSTALL:append:jetson-xavier-nx-devkit = " \
@@ -146,6 +153,7 @@ IMAGE_INSTALL:append:jetson-xavier-nx-devkit = " \
     tegra-wifi \
     tegra-firmware-rtl8822 \
     tegra-udrm-probeconf \
+    tegra-boot-tools \
 "
 
 IMAGE_INSTALL:append:jetson-tx2 = " \
@@ -160,13 +168,10 @@ IMAGE_INSTALL:append:jetson-tx2 = " \
     tegra-brcm-patchram \
     linux-firmware-bcm4354 \
     tegra-firmware-xusb \
+    tegra-firmware-rtl8822 \
     bt-scripts \
     jetson-dtbs \
     kernel-module-bcmdhd \
-"
-
-IMAGE_INSTALL:append:jetson-tx2-nx-devkit = " \
-    tegra-firmware-rtl8822 \
     kernel-module-rtk-btusb \
     kernel-module-rtl8822ce \
 "
@@ -182,3 +187,5 @@ IMAGE_INSTALL:append:jetson-tx1 = " \
     linux-firmware-bcm4354 \
     bt-scripts \
 "
+
+IMAGE_INSTALL:remove = "kernel-image-initramfs"
