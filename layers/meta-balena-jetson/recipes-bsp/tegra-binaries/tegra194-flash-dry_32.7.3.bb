@@ -28,7 +28,11 @@ SRC_URI = " \
 
 PINMUXCFG = "tegra19x-mb1-pinmux-p2888-0000-a04-p2822-0000-b01.cfg"
 LNXSIZE ?= "67108864"
-DTBNAME = "tegra194-p2888-0001-p2822-0000"
+# DTBNAME = "tegra194-p2888-0001-p2822-0000"
+DTBNAME_kiwi-xavier = "tegra194-agx-kiwi-AGX"
+DTBNAME = "tegra194-agx-kiwi-AGX"
+DTBNAME_cti-rogue-xavier = "tegra194-agx-cti-AGX101"
+DTBNAME_nru120s-xavier = "NRU120-32-4-3"
 KERNEL_DEVICETREE = "${DEPLOY_DIR_IMAGE}/${DTBNAME}.dtb"
 DTBFILE ?= "${@os.path.basename(d.getVar('KERNEL_DEVICETREE', True).split()[0])}"
 
@@ -166,6 +170,11 @@ do_configure() {
     fdtput -t s ./${DTBNAME}-rootA.dtb /chosen bootargs "$bootargs ${ROOTA_ARGS}"
     fdtput -t s ./${DTBNAME}-rootB.dtb /chosen bootargs "$bootargs ${ROOTB_ARGS}"
 
+    for dtnode in can1 can2
+    do
+        fdtput -t x tegra194-a02-bpmp-p2888-a04.dtb "/clocks/clock@$dtnode" "allowed-parents" "121" "5b" "13a" "5e"
+    done
+
     # Make bootable image from kernel and sign it
     cp ${DEPLOY_DIR_IMAGE}/${LNXFILE} ${LNXFILE}
     ln -sf ${STAGING_BINDIR_NATIVE}/tegra186-flash/mkbootimg ./
@@ -210,7 +219,8 @@ do_configure() {
     cp ${WORKDIR}/resinOS-flash194.xml ${DEPLOY_DIR_IMAGE}/bootfiles/flash.xml
     cp -r signed/* ${DEPLOY_DIR_IMAGE}/bootfiles/
     cp -r ${DTBNAME}-root*_sigheader.dtb.encrypt ${DEPLOY_DIR_IMAGE}/bootfiles/
-    dd if=/dev/zero of="${DEPLOY_DIR_IMAGE}/bootfiles/bmp.blob" bs=1K count=1
+    # dd if=/dev/zero of="${DEPLOY_DIR_IMAGE}/bootfiles/bmp.blob" bs=1K count=1
+    dd if=/dev/zero of="${DEPLOY_DIR_IMAGE}/bootfiles/bmp.blob" bs=1K count=70
 
     # This is the Xavier boot0, which wasn't necessary for HUP from L4T 31.x to 32.3.1,
     # but becomes when moving to L4T 32.4.2 or newer.

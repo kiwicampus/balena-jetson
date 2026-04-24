@@ -50,6 +50,7 @@ TEGRA_BOARD_FDT_FILE:jetson-tx2="tegra186-quill-p3310-1000-c03-00-base.dtb"
 TEGRA_BOARD_FDT_FILE:jetson-tx2-nx-devkit="tegra186-p3636-0001-p3509-0000-a01.dtb"
 TEGRA_BOARD_FDT_FILE:astro-tx2="tegra186-tx2-cti-ASG001-revG+.dtb"
 TEGRA_BOARD_FDT_FILE:floyd-nano = "tegra210-p3448-0002-p3449-0000-b00-floyd-nano.dtb"
+TEGRA_BOARD_FDT_FILE:kiwi-xavier="tegra194-agx-kiwi-AGX.dtb"
 
 UBOOT_VARS:append = "\
     TEGRA_BOARD_FDT_FILE \
